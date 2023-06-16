@@ -3,7 +3,6 @@
     public interface IUnitOfWork
     {
         IPostRepository PostRepository { get; }
-        Task StartTransaction();
-        Task EndTransaction();
+        Task SaveChanges();
     }
 }

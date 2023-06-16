@@ -1,10 +1,8 @@
-﻿using Domain.Entities;
-
-namespace Domain.Interfaces
+﻿namespace Domain.Interfaces
 {
-    public interface ICachingService
+    public interface ICachingService<T>
     {
-        Task<Post> GetPostAsync(Guid id, CancellationToken cancellationToken);
-        Task CreatePost(Post post, DateTime validUntil, CancellationToken cancellationToken);
+        void Set(object key, DateTime validUntil, T id);
+        bool TryGetValue(object id, out T post);
     }
 }

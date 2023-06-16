@@ -42,7 +42,7 @@ namespace PostsApi.Controllers
             var command = new GetPostsQuery()
             {
             };
-            var posts = await _mediator.Send(command);
+            var posts = await _mediator.Send(command, cancellationToken);
             return posts.Any()
                 ? Ok(posts)
                 : NotFound();
@@ -52,7 +52,7 @@ namespace PostsApi.Controllers
         [ProducesResponseType(typeof(IEnumerable<Post>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CreatePostAsync(CreatePostCommand command, CancellationToken cancellationToken)
         {
-            await _mediator.Send(command);
+            await _mediator.Send(command, cancellationToken);
             return Ok();
         }
     }

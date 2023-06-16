@@ -1,19 +1,26 @@
 ﻿using Domain.Interfaces;
+using Microsoft.Data.Sqlite;
 
 namespace Infrastructure.SqlLite
 {
     internal class UnitOfWork : IUnitOfWork
     {
-        public IPostRepository PostRepository => throw new NotImplementedException();
-
-        public Task EndTransaction()
+        private readonly SqliteConnection _connection;
+        private readonly SqliteTransaction _transaction;
+       
+        public UnitOfWork(ISqlConnectionFactory factory) 
         {
-            throw new NotImplementedException();
+            _connection = factory.Create();
+            _connection.Open();
+            _transaction = _connection.BeginTransaction();
+            PostRepository = new PostRepository(_connection, _transaction);
         }
 
-        public Task StartTransaction()
+        public IPostRepository PostRepository { get; }
+
+        public async Task SaveChanges()
         {
-            throw new NotImplementedException();
+            await _transaction.CommitAsync();
         }
     }
 }

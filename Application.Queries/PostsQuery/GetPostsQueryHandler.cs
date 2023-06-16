@@ -6,20 +6,27 @@ namespace Application.Queries.PostsQuery
 {
     public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, IEnumerable<Post>>
     {
-        private readonly IPostRepository _postRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IPostRetrivalClient _postRetrivalClient;
 
         public GetPostsQueryHandler(
-            IPostRepository postRepository, 
+            IUnitOfWork unitOfWork, 
             IPostRetrivalClient postRetrivalClient)
         {
-            _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _postRetrivalClient = postRetrivalClient ?? throw new ArgumentNullException(nameof(postRetrivalClient));
         }
 
-        public Task<IEnumerable<Post>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Post>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var posts = await _unitOfWork.PostRepository.GetPostsAsync(cancellationToken);
+            if (!posts.Any())
+            {
+                var postsFromApi = (await _postRetrivalClient.GetPostsAsync(cancellationToken)).ToList();
+                return postsFromApi;
+            }
+
+            return posts;
         }
     }
 }

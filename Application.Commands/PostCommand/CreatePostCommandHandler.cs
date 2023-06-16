@@ -5,11 +5,11 @@ namespace Application.Commands.PostCommand
 {
     internal class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, Unit>
     {
-        private readonly IPostRepository _postRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreatePostCommandHandler(IPostRepository postRepository)
+        public CreatePostCommandHandler(IUnitOfWork unitOfWork)
         {
-            _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         public Task<Unit> Handle(CreatePostCommand request, CancellationToken cancellationToken)

@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces;
+﻿using Domain.Entities;
+using Domain.Interfaces;
 using MediatR;
 
 namespace Application.Commands.PostCommand
@@ -12,9 +13,13 @@ namespace Application.Commands.PostCommand
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public Task<Unit> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var id = Guid.NewGuid();
+            var post = new Post(id, request.Title, request.AuthorName, request.Score, request.CreatedAt);
+            await _unitOfWork.PostRepository.CreatePost(post, cancellationToken);
+            await _unitOfWork.SaveChanges(cancellationToken);
+            return Unit.Value;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace PostsApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Post), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetPostAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPostAsync([FromRoute]Guid id, CancellationToken cancellationToken)
         {
             var command = new GetPostQuery()
             {
@@ -49,7 +49,7 @@ namespace PostsApi.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(IEnumerable<Post>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> CreatePostAsync(CreatePostCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);

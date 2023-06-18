@@ -21,7 +21,8 @@
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Caching.InMemory\Caching.InMemory.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure.SqlLite\Infrastructure.SqlLite.csproj" />
+    <ProjectReference Include="..\Infrastructure.SqLite\Infrastructure.SqLite.csproj" />
+    <ProjectReference Include="..\Infrastructure.SqlLite\Infrastructure.SqLite.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
 ﻿using Domain.Interfaces;
-using Infrastructure.SqlLite.Interfaces;
+using Infrastructure.SqlLite.Abstractions;
 using Microsoft.Data.Sqlite;
 
 namespace Infrastructure.SqlLite
 {
-    internal class UnitOfWork : IUnitOfWork
+    internal class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly SqliteConnection _connection;
         private readonly SqliteTransaction _transaction;
@@ -19,9 +19,23 @@ namespace Infrastructure.SqlLite
 
         public IPostRepository PostRepository { get; }
 
-        public async Task SaveChanges()
+        public void Dispose()
         {
-            await _transaction.CommitAsync();
+            if (_transaction != null)
+            {
+                _transaction.Dispose();
+            }
+
+            if (_connection != null)
+            {
+                _connection.Close();
+                _connection.Dispose();
+            }
+        }
+
+        public async Task SaveChanges(CancellationToken cancellationToken)
+        {
+            await _transaction.CommitAsync(cancellationToken);
         }
     }
 }

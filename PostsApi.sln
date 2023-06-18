@@ -11,21 +11,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{30C801C9-1025-4A52-AD6A-191942B85E47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Commands", "Application.Commands\Application.Commands.csproj", "{D3D298BA-9BE8-47BA-8ED6-B30C0A7CB095}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Commands", "Application.Commands\Application.Commands.csproj", "{D3D298BA-9BE8-47BA-8ED6-B30C0A7CB095}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Queries", "Application.Queries\Application.Queries.csproj", "{57BA81E7-B348-4303-BED1-7D59DE448369}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Queries", "Application.Queries\Application.Queries.csproj", "{57BA81E7-B348-4303-BED1-7D59DE448369}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.SqlLite", "Infrastructure.SqlLite\Infrastructure.SqlLite.csproj", "{D077E43C-7639-4DDD-A853-146D6D720770}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.SqLite", "Infrastructure.SqLite\Infrastructure.SqLite.csproj", "{D077E43C-7639-4DDD-A853-146D6D720770}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Reddit", "Api.Reddit\Api.Reddit.csproj", "{472FC78A-8FD4-4A90-B904-99FE9949DABC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Reddit", "Api.Reddit\Api.Reddit.csproj", "{472FC78A-8FD4-4A90-B904-99FE9949DABC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{0CCBA02E-BA66-448D-8F20-8DF6C4611D00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{0CCBA02E-BA66-448D-8F20-8DF6C4611D00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caching.InMemory", "Caching.InMemory\Caching.InMemory.csproj", "{496A3AF4-504C-423E-9D6D-B6E01450AB0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.InMemory", "Caching.InMemory\Caching.InMemory.csproj", "{496A3AF4-504C-423E-9D6D-B6E01450AB0D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{D49E721E-49FC-4434-A8B8-38E0D534119C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{236413DB-C225-43E5-8C74-44E3E7D8DB13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{236413DB-C225-43E5-8C74-44E3E7D8DB13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-﻿using Infrastructure.SqlLite.Interfaces;
+﻿using Infrastructure.SqlLite.Abstractions;
 using Infrastructure.SqlLite.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 
-namespace Infrastructure.SqlLite.Interfaces
+namespace Infrastructure.SqlLite.Abstractions
 {
     internal interface ISqlConnectionFactory
     {

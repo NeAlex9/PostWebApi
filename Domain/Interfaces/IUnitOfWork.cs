@@ -3,6 +3,6 @@
     public interface IUnitOfWork
     {
         IPostRepository PostRepository { get; }
-        Task SaveChanges();
+        Task SaveChanges(CancellationToken cancellationToken);
     }
 }

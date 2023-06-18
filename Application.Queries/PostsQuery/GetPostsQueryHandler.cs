@@ -23,6 +23,12 @@ namespace Application.Queries.PostsQuery
             if (!posts.Any())
             {
                 var postsFromApi = (await _postRetrivalClient.GetPostsAsync(cancellationToken)).ToList();
+                if (postsFromApi.Any())
+                {
+                    await _unitOfWork.PostRepository.CreatePosts(postsFromApi, cancellationToken);
+                    await _unitOfWork.SaveChanges(cancellationToken);
+                }
+
                 return postsFromApi;
             }
 

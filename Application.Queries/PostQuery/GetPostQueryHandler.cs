@@ -10,12 +10,12 @@ namespace Application.Queries.PostQuery
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICachingService<Post> _cachingService;
-        private readonly CachingOptions _cachingOptions;
+        private readonly PostCachingOptions _cachingOptions;
 
         public GetPostQueryHandler(
             IUnitOfWork unitOfWork,
             ICachingService<Post> cachingService,
-            IOptions<CachingOptions> options)
+            IOptions<PostCachingOptions> options)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _cachingService = cachingService ?? throw new ArgumentNullException(nameof(cachingService));

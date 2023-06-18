@@ -8,9 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration.GetSection("PostCachingOptions"));
 builder.Services.AddRedditApiService(builder.Configuration.GetSection("RedditConfiguration"));
-builder.Services.AddRepository(builder.Configuration.GetSection("SqlConnectionString"));
+builder.Services.AddSqLiteInfrastructure(builder.Configuration.GetSection("SqlConnectionString"));
 builder.Services.AddCachingService();
 
 var app = builder.Build();

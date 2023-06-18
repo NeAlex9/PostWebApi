@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Application.Commands
+namespace Application.Queries
 {
     public static class ApplicationQueryProvider
     {

@@ -9,7 +9,7 @@ namespace Caching.InMemory
         public static IServiceCollection AddCachingService(this IServiceCollection services)
         {
             services.AddMemoryCache();
-            return services.AddScoped<ICachingService<Post>, CachingService>();
+            return services.AddSingleton<ICachingService<Post>, CachingService>();
         }
     }
 }

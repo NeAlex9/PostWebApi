@@ -1,6 +1,6 @@
 ﻿namespace Application.Queries.Models
 {
-    public class CachingOptions
+    public class PostCachingOptions
     {
         public int ValidInSeconds { get; set; }
     }

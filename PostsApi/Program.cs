@@ -2,8 +2,11 @@ using Api.Reddit;
 using Application;
 using Caching.InMemory;
 using Infrastructure.SqlLite;
+using PostsApi.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddLogging();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

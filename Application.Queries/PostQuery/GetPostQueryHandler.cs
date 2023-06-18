@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Application.Queries.PostQuery
@@ -10,15 +11,18 @@ namespace Application.Queries.PostQuery
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICachingService<Post> _cachingService;
+        private readonly ILogger<GetPostQueryHandler> _logger;
         private readonly PostCachingOptions _cachingOptions;
 
         public GetPostQueryHandler(
             IUnitOfWork unitOfWork,
             ICachingService<Post> cachingService,
-            IOptions<PostCachingOptions> options)
+            IOptions<PostCachingOptions> options,
+            ILogger<GetPostQueryHandler> logger)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _cachingService = cachingService ?? throw new ArgumentNullException(nameof(cachingService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger)); ;
             _cachingOptions = options.Value ?? throw new ArgumentNullException();
         }
 
@@ -26,15 +30,21 @@ namespace Application.Queries.PostQuery
         {
             if (_cachingService.TryGetValue(request.Id, out Post cachedPost))
             {
+                _logger.LogInformation($"Cached post {request.Id} has been retrieved");
                 return cachedPost;
             }
 
             var post = await _unitOfWork.PostRepository.GetPostAsync(request.Id, cancellationToken);
             if (post != null)
             {
-                _cachingService.Set(request.Id, DateTime.UtcNow.AddSeconds(_cachingOptions.ValidInSeconds), post);
+                _logger.LogInformation($"Post {request.Id} has been cached");
+                var validUntil = DateTime.UtcNow.AddSeconds(_cachingOptions.ValidInSeconds);
+                _cachingService.Set(request.Id, validUntil, post);
             }
 
+            _logger.LogInformation(post is not null 
+                ? $"Post {request.Id} has been retrieved from db"
+                : $"Failed to get post {request.Id}");
             return post;
         }
     }

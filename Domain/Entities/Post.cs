@@ -2,18 +2,18 @@
 {
     public class Post : IEntity
     {
-        public Post(string title, string author, int score, DateTime dateTime)
+        public Post(Guid id, string title, string authorName, int score, DateTime dateTime)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Title = title ?? throw new ArgumentNullException(nameof(title));
-            Author = author ?? throw new ArgumentNullException(nameof(author));
+            AuthorName = authorName ?? throw new ArgumentNullException(nameof(authorName));
             Score = score;
             CreatedAt = dateTime;
         }
 
         public Guid Id { get; private set; }
         public string Title { get; private set; }
-        public string Author { get; private set; }
+        public string AuthorName { get; private set; }
         public int Score { get; private set; }
         public DateTime CreatedAt { get; private set; }
     }

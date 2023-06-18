@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces;
+using Infrastructure.SqlLite.Interfaces;
 using Microsoft.Data.Sqlite;
 
 namespace Infrastructure.SqlLite

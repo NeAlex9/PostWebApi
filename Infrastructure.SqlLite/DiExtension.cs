@@ -1,4 +1,6 @@
 ﻿using Domain.Interfaces;
+using Infrastructure.SqlLite.Interfaces;
+using Infrastructure.SqlLite.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

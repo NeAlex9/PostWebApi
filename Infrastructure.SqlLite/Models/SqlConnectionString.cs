@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.SqlLite
+﻿namespace Infrastructure.SqlLite.Models
 {
     internal class SqlConnectionString
     {

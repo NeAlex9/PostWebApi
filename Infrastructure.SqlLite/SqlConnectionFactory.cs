@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Infrastructure.SqlLite.Interfaces;
+using Infrastructure.SqlLite.Models;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.SqlLite
@@ -16,7 +18,6 @@ namespace Infrastructure.SqlLite
         public SqliteConnection Create()
         {
             var connection = new SqliteConnection(_connectionString);
-            connection.Open();
             return connection;
         }
     }

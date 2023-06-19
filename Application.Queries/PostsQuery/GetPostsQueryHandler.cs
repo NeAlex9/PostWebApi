@@ -12,7 +12,7 @@ namespace Application.Queries.PostsQuery
         private readonly ILogger _logger;
 
         public GetPostsQueryHandler(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             IPostRetrivalClient postRetrivalClient,
             ILogger<GetPostsQueryHandler> logger)
         {

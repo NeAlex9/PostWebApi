@@ -1,6 +1,7 @@
 using Api.Reddit;
 using Application;
 using Caching.InMemory;
+using Domain.Models;
 using Infrastructure.SqlLite;
 using PostsApi.Helpers;
 
@@ -11,6 +12,7 @@ builder.AddLogging();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<UserCredentials>(builder.Configuration.GetSection("UserCredentials"));
 builder.Services.AddApplication(builder.Configuration.GetSection("PostCachingOptions"));
 builder.Services.AddRedditApiService(builder.Configuration.GetSection("RedditConfiguration"));
 builder.Services.AddSqLiteInfrastructure(builder.Configuration.GetSection("SqlConnectionString"));

@@ -1,8 +1,8 @@
 ﻿namespace Domain.Interfaces
 {
-    public interface ICachingService<T>
+    public interface ICachingService
     {
-        void Set(object key, DateTime validUntil, T id);
-        bool TryGetValue(object id, out T post);
+        void Set<T>(object key, DateTime validUntil, T id);
+        bool TryGetValue<T>(object id, out T post);
     }
 }

@@ -33,7 +33,6 @@ namespace Api.Reddit.Services
                 { "grant_type",  _redditOptions.GrantType}
             };
             var content = new FormUrlEncodedContent(values);
-
             var postResponse = await _httpClient.PostAsync("access_token", content, cancellationToken);
             postResponse.EnsureSuccessStatusCode();
             var json = await postResponse.Content.ReadAsStringAsync();

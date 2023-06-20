@@ -4,19 +4,21 @@ using Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace Application.Queries.PostQuery
 {
     internal class GetPostQueryHandler : IRequestHandler<GetPostQuery, Post?>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ICachingService<Post> _cachingService;
+        private readonly ICachingService _cachingService;
         private readonly ILogger<GetPostQueryHandler> _logger;
         private readonly PostCachingOptions _cachingOptions;
 
         public GetPostQueryHandler(
             IUnitOfWork unitOfWork,
-            ICachingService<Post> cachingService,
+            ICachingService cachingService,
             IOptions<PostCachingOptions> options,
             ILogger<GetPostQueryHandler> logger)
         {
@@ -35,7 +37,7 @@ namespace Application.Queries.PostQuery
             }
 
             var post = await _unitOfWork.PostRepository.GetPostAsync(request.Id, cancellationToken);
-            if (post != null)
+            if (post is not null)
             {
                 _logger.LogInformation($"Post {request.Id} has been cached");
                 var validUntil = DateTime.UtcNow.AddSeconds(_cachingOptions.ValidInSeconds);

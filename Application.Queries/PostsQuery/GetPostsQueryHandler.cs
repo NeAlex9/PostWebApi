@@ -2,7 +2,9 @@
 using Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace Application.Queries.PostsQuery
 {
     public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, IEnumerable<Post>>

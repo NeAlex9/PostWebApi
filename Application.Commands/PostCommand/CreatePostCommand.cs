@@ -10,10 +10,6 @@ namespace Application.Commands.PostCommand
         public string Title { get; set; }
 
         [Required]
-        [MaxLength(50)]
-        public string AuthorName { get; set; }
-
-        [Required]
         [Range(0, int.MaxValue)]
         public int Score { get; set; }
 

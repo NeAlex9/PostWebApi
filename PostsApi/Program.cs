@@ -17,6 +17,7 @@ builder.Services.AddApplication(builder.Configuration.GetSection("PostCachingOpt
 builder.Services.AddRedditApiService(builder.Configuration.GetSection("RedditConfiguration"));
 builder.Services.AddSqLiteInfrastructure(builder.Configuration.GetSection("SqlConnectionString"));
 builder.Services.AddCachingService();
+builder.Services.ConfigureCors();
 
 var app = builder.Build();
 
@@ -30,6 +31,7 @@ if (app.Environment.IsDevelopment())
 app.ConfigureExceptionHandler();
 
 app.UseHttpsRedirection();
+app.UseCors("CORSPolicy");
 
 app.UseRouting();
 

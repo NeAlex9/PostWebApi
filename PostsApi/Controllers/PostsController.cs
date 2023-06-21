@@ -50,6 +50,7 @@ namespace PostsApi.Controllers
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreatePostAsync(CreatePostCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);

@@ -13,7 +13,6 @@ namespace Api.Reddit
     {
         private static readonly Guid _accessTokenKey = Guid.NewGuid();
 
-        private const int _postsCount = 15;
         private readonly HttpClient _httpClient;
         private readonly IApiAuthenticator _redditAuthenticator;
         private readonly ICachingService _cachingService;
@@ -31,7 +30,7 @@ namespace Api.Reddit
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<IEnumerable<Post>> GetPostsAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Post>> GetPostsAsync(int postsCount, CancellationToken cancellationToken)
         {
             if (!_cachingService.TryGetValue(_accessTokenKey, out RedditToken accessToken))
             {
@@ -43,12 +42,13 @@ namespace Api.Reddit
             }
 
             SetHeaders(accessToken.Value);
-            var popularResponse = await _httpClient.GetAsync($"r/funny/top?limit={_postsCount}");
+            var url = $"r/funny/top?limit={postsCount}";
+            var popularResponse = await _httpClient.GetAsync(url);
             if (popularResponse.StatusCode == HttpStatusCode.Unauthorized)
             {
                 accessToken = await GetAndSaveToken(cancellationToken);
                 SetHeaders(accessToken.Value);
-                popularResponse = await _httpClient.GetAsync($"r/funny/top?limit={_postsCount}");
+                popularResponse = await _httpClient.GetAsync(url);
                 popularResponse.EnsureSuccessStatusCode();
             }
 

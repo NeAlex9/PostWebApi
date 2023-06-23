@@ -165,7 +165,7 @@ namespace UnitTests.Application
         public void GetPosts_GetFromReddit_Success()
         {
             var mockPostRetrivalClient = new Mock<IPostRetrivalClient>();
-            mockPostRetrivalClient.Setup(client => client.GetPostsAsync(It.IsAny<CancellationToken>()))
+            mockPostRetrivalClient.Setup(client => client.GetPostsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(Enumerable.Empty<Post>()));
 
             //mockCachingService.Verify(cache => cache.Set(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<Post>()), Times.Once());

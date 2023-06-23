@@ -6,14 +6,11 @@ namespace Application.Commands.PostCommand
     public class CreatePostCommand : IRequest<Unit>
     {
         [Required]
-        [MaxLength(255)]
+        [MaxLength(50)]
         public string Title { get; set; }
 
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int Score { get; set; }
+        public int Score { get; set; } = 0;
 
-        [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

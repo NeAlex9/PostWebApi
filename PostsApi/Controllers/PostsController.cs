@@ -37,11 +37,8 @@ namespace PostsApi.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(IEnumerable<Post>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetPostsAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPostsAsync([FromQuery]GetPostsQuery command, CancellationToken cancellationToken)
         {
-            var command = new GetPostsQuery()
-            {
-            };
             var posts = await _mediator.Send(command, cancellationToken);
             return posts.Any()
                 ? Ok(posts)

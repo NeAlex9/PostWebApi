@@ -4,6 +4,6 @@ namespace Domain.Interfaces
 {
     public interface IPostRetrivalClient
     {
-        Task<IEnumerable<Post>> GetPostsAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<Post>> GetPostsAsync(int postsCount, CancellationToken cancellationToken);
     }
 }

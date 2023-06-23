@@ -25,10 +25,10 @@ namespace Application.Queries.PostsQuery
 
         public async Task<IEnumerable<Post>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
         {
-            var posts = await _unitOfWork.PostRepository.GetPostsAsync(cancellationToken);
+            var posts = await _unitOfWork.PostRepository.GetPostsAsync(request.Limit, cancellationToken);
             if (!posts.Any())
             {
-                var postsFromApi = (await _postRetrivalClient.GetPostsAsync(cancellationToken)).ToList();
+                var postsFromApi = (await _postRetrivalClient.GetPostsAsync(request.Limit, cancellationToken)).ToList();
                 _logger.LogInformation("Posts has been retrieved from reddit api");
                 if (postsFromApi.Any())
                 {

@@ -87,11 +87,13 @@ namespace Infrastructure.SqlLite
             return null;
         }
 
-        public async Task<IEnumerable<Post>> GetPostsAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Post>> GetPostsAsync(int limit, CancellationToken cancellationToken)
         {
-            const string queryText = @"SELECT * FROM Posts";
+            const string queryText = @"SELECT * FROM Posts
+                                       LIMIT @limit";
             using var query = CreateCommand();
             query.CommandText = queryText;
+            query.Parameters.AddWithValue("@limit", limit);
             using var reader = await query.ExecuteReaderAsync(cancellationToken);
             var posts = new List<Post>();
             if (reader.HasRows)

@@ -89,8 +89,11 @@ namespace Infrastructure.SqlLite
 
         public async Task<IEnumerable<Post>> GetPostsAsync(int limit, CancellationToken cancellationToken)
         {
-            const string queryText = @"SELECT * FROM Posts
+            const string queryText = @"SELECT * 
+                                       FROM Posts
+                                       ORDER BY createdAt DESC     
                                        LIMIT @limit";
+
             using var query = CreateCommand();
             query.CommandText = queryText;
             query.Parameters.AddWithValue("@limit", limit);

@@ -56,8 +56,7 @@ namespace Infrastructure.SqlLite
             var tasks = new List<Task>();
             foreach (var post in posts)
             {
-                var id = Guid.NewGuid();
-                idParameter.Value = id;
+                idParameter.Value = post.Id;
                 titleParameter.Value = post.Title;
                 authorNameParameter.Value = post.AuthorName;
                 scoreParameter.Value = post.Score;

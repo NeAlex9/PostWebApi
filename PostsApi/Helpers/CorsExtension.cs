@@ -9,6 +9,6 @@
                                .AllowAnyHeader()
                                .AllowAnyMethod()
                                .AllowCredentials()
-                               .WithOrigins(new[] { "http://localhost:4200" })));
+                                .WithOrigins(new[] { "http://localhost:8080" })));
     }
 }

@@ -19,4 +19,7 @@ RUN dotnet publish "PostsApi.csproj" -c Release -o /app/publish /p:UseAppHost=fa
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+COPY PostsApi/PostsDb.sqlite ./PostsDb.sqlite
+
 ENTRYPOINT ["dotnet", "PostsApi.dll"]

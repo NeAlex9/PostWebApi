@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  back:
+    image: nevstruev/posts-server-api:v2
+    container_name: posts-server-api
+    ports:
+      - 49159:80
+    networks:
+      - my-network
+
+  front:
+    image: nevstruev/posts-client:v1
+    container_name: posts-client
+    ports:
+      - 8080:80
+    networks:
+      - my-network
+
+networks:
+  my-network:

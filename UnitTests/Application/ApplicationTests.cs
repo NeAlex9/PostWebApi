@@ -1,5 +1,4 @@
-﻿using Api.Reddit.Models;
-using Application.Commands.PostCommand;
+﻿using Application.Commands.PostCommand;
 using Application.Queries.Models;
 using Application.Queries.PostQuery;
 using Application.Queries.PostsQuery;
@@ -15,13 +14,6 @@ namespace UnitTests.Application
 {
     public class ApplicationTests
     {
-        private readonly ApiOptions _apiOptions = new ApiOptions
-        {
-            ApplicationId = "id",
-            ApplicationSecret = "secret",
-            GrantType = "type",
-            UserAgent = "agent",
-        };
         private readonly UserCredentials _userOptions = new UserCredentials
         {
             UserName = "user",

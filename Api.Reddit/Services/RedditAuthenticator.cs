@@ -3,9 +3,11 @@ using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace Api.Reddit.Services
 {
     internal class RedditAuthenticator : IApiAuthenticator

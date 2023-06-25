@@ -2,9 +2,11 @@
 using Application.Commands.PostCommand;
 using Application.Queries.Models;
 using Application.Queries.PostQuery;
+using Application.Queries.PostsQuery;
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Models;
+using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -23,7 +25,6 @@ namespace UnitTests.Application
         private readonly UserCredentials _userOptions = new UserCredentials
         {
             UserName = "user",
-            Password = "password",
         };
         private readonly PostCachingOptions _postCachingOptions = new PostCachingOptions
         {
@@ -119,17 +120,19 @@ namespace UnitTests.Application
                 Id = Guid.NewGuid(),
             };
 
-            await handler.Handle(command, CancellationToken.None);
+            var nullPost = await handler.Handle(command, CancellationToken.None);
 
             mockUnitOfWork.Verify(uof => uof.SaveChanges(It.IsAny<CancellationToken>()), Times.Never());
             mockUnitOfWork.Verify(uof => uof.PostRepository, Times.Once());
             mockCachingService.Verify(cache => cache.TryGetValue(It.IsAny<Guid>(), out post), Times.Once());
             mockCachingService.Verify(cache => cache.Set(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<Guid>()), Times.Never());
             mockPostRepository.Verify(repository => repository.GetPostAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once());
+
+            Assert.Null(nullPost);
         }
 
         [Fact]
-        public async Task GetPost_GetFromCache_ReturnPost()
+        public async Task GetPost_GetFromCache_Success()
         {
             var mockPostRepository = new Mock<IPostRepository>();
             mockPostRepository.Setup(uof => uof.GetPostAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
@@ -162,13 +165,120 @@ namespace UnitTests.Application
             mockPostRepository.Verify(repository => repository.GetPostAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never());
         }
 
-        public void GetPosts_GetFromReddit_Success()
+        [Fact]
+        public async void GetPosts_GetFromSqLite_Success()
         {
-            var mockPostRetrivalClient = new Mock<IPostRetrivalClient>();
-            mockPostRetrivalClient.Setup(client => client.GetPostsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.FromResult(Enumerable.Empty<Post>()));
+            var mockPostRepository = new Mock<IPostRepository>();
+            var limit = 1;
+            var posts = new Post[] { new Post(Guid.NewGuid(), "title", "name", 23, DateTime.UtcNow) };
+            mockPostRepository.Setup(uof => uof.GetPostsAsync(limit, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(posts);
 
-            //mockCachingService.Verify(cache => cache.Set(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<Post>()), Times.Once());
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(uof => uof.PostRepository)
+                .Returns(mockPostRepository.Object);
+
+            var mockPostRetrivalClient = new Mock<IPostRetrivalClient>();
+
+            var handler = new GetPostsQueryHandler(
+                mockUnitOfWork.Object,
+                mockPostRetrivalClient.Object,
+                new NullLogger<GetPostsQueryHandler>());
+
+            var command = new GetPostsQuery()
+            {
+                Limit = limit,
+            };
+
+            var retrievedPosts = await handler.Handle(command, CancellationToken.None);
+
+            mockPostRepository.Verify(repository => repository.GetPostsAsync(limit, It.IsAny<CancellationToken>()), Times.Once());
+            mockUnitOfWork.Verify(uof => uof.PostRepository, Times.Once);
+            mockPostRetrivalClient.Verify(repository => repository.GetPostsAsync(limit, It.IsAny<CancellationToken>()), Times.Never());
+            mockPostRepository.Verify(repository => repository.CreatePosts(posts, It.IsAny<CancellationToken>()), Times.Never());
+            mockUnitOfWork.Verify(uof => uof.SaveChanges(It.IsAny<CancellationToken>()), Times.Never());
+
+            retrievedPosts.Should().Equal(posts);
+        }
+
+        [Fact]
+        public async void GetPosts_GetFromReddit_Success()
+        {
+            var posts = new Post[] { new Post(Guid.NewGuid(), "title", "name", 23, DateTime.UtcNow) };
+            var mockPostRepository = new Mock<IPostRepository>();
+            mockPostRepository.Setup(uof => uof.CreatePosts(posts, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+            var limit = 1;
+            mockPostRepository.Setup(uof => uof.GetPostsAsync(limit, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Enumerable.Empty<Post>);
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(uof => uof.PostRepository)
+                .Returns(mockPostRepository.Object);
+
+            var mockPostRetrivalClient = new Mock<IPostRetrivalClient>();
+            mockPostRetrivalClient.Setup(client => client.GetPostsAsync(limit, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(posts);
+
+            var handler = new GetPostsQueryHandler(
+                mockUnitOfWork.Object,
+                mockPostRetrivalClient.Object,
+                new NullLogger<GetPostsQueryHandler>());
+
+            var command = new GetPostsQuery()
+            {
+                Limit = limit,
+            };
+
+            var retrievedPosts = await handler.Handle(command, CancellationToken.None);
+
+            mockPostRepository.Verify(repository => repository.GetPostsAsync(limit, It.IsAny<CancellationToken>()), Times.Once());
+            mockUnitOfWork.Verify(uof => uof.PostRepository, Times.Exactly(2));
+            mockPostRetrivalClient.Verify(repository => repository.GetPostsAsync(limit, It.IsAny<CancellationToken>()), Times.Once());
+            mockPostRepository.Verify(repository => repository.CreatePosts(posts, It.IsAny<CancellationToken>()), Times.Once());
+            mockUnitOfWork.Verify(uof => uof.SaveChanges(It.IsAny<CancellationToken>()), Times.Once());
+
+            retrievedPosts.Should().Equal(posts);
+        }
+
+        [Fact]
+        public async void GetPosts_GetFromReddit_EmptyCollectionReturned_Success()
+        {
+            var posts = Enumerable.Empty<Post>();
+            var mockPostRepository = new Mock<IPostRepository>();
+            mockPostRepository.Setup(uof => uof.CreatePosts(posts, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+            var limit = 1;
+            mockPostRepository.Setup(uof => uof.GetPostsAsync(limit, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Enumerable.Empty<Post>);
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(uof => uof.PostRepository)
+                .Returns(mockPostRepository.Object);
+
+            var mockPostRetrivalClient = new Mock<IPostRetrivalClient>();
+            mockPostRetrivalClient.Setup(client => client.GetPostsAsync(limit, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(posts);
+
+            var handler = new GetPostsQueryHandler(
+                mockUnitOfWork.Object,
+                mockPostRetrivalClient.Object,
+                new NullLogger<GetPostsQueryHandler>());
+
+            var command = new GetPostsQuery()
+            {
+                Limit = limit,
+            };
+
+            var retrievedPosts = await handler.Handle(command, CancellationToken.None);
+
+            mockPostRepository.Verify(repository => repository.GetPostsAsync(limit, It.IsAny<CancellationToken>()), Times.Once());
+            mockUnitOfWork.Verify(uof => uof.PostRepository, Times.Once);
+            mockPostRetrivalClient.Verify(repository => repository.GetPostsAsync(limit, It.IsAny<CancellationToken>()), Times.Once());
+            mockPostRepository.Verify(repository => repository.CreatePosts(posts, It.IsAny<CancellationToken>()), Times.Never());
+            mockUnitOfWork.Verify(uof => uof.SaveChanges(It.IsAny<CancellationToken>()), Times.Never());
+
+            retrievedPosts.Should().Equal(posts);
         }
     }
 }
